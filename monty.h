@@ -1,84 +1,119 @@
 #ifndef MONTY_H
 #define MONTY_H
 
-#define _GNU_SOURCE
 #include <stdio.h>
-#include <unistd.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdbool.h>
 #include <ctype.h>
-#include <stdarg.h>
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
  * @prev: points to the previous element of the stack (or queue)
  * @next: points to the next element of the stack (or queue)
- *
  * Description: doubly linked list node structure
- * for stack, queues, LIFO, FIFO
+ * for stack, queues, LIFO, FIFO Alx project
+ */
+typedef struct arg_s
+{
+	int arg;
+	int flag;
+} arg_t;
+
+extern arg_t arg;
+
+/**
+ * struct stack_s - doubly linked list representation of a stack (or queue)
+ * @n: integer
+ * @prev: points to the previous element of the stack (or queue)
+ * @next: points to the next element of the stack (or queue)
+ * Description: doubly linked list node structure
+ * for stack, queues, LIFO, FIFO Holberton project
  */
 typedef struct stack_s
 {
-        int n;
-        struct stack_s *prev;
-        struct stack_s *next;
+	int n;
+	struct stack_s *prev;
+	struct stack_s *next;
 } stack_t;
 
 /**
  * struct instruction_s - opcode and its function
  * @opcode: the opcode
  * @f: function to handle the opcode
- *
  * Description: opcode and its function
- * for stack, queues, LIFO, FIFO
+ * for stack, queues, LIFO, FIFO Holberton project
  */
 typedef struct instruction_s
 {
-        char *opcode;
-        void (*f)(stack_t **stack, unsigned int line_number);
+	char *opcode;
+	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-extern stack_t *head;
-typedef void (*op_func)(stack_t **, unsigned int);
+/**
+ * struct line - contents of line and corresponding number
+ * @contents: array of tokens read from the line
+ * @number: the line number
+ * Description: contents of a line and corresponding number
+ */
+typedef struct line
+{
+	unsigned int number;
+	char **content;
+} line_t;
 
-/*file operations*/
-void open_file(char *file_name);
-int parse_line(char *buffer, int line_number, int format);
-void read_file(FILE *);
-int len_chars(FILE *);
-void find_func(char *, char *, int, int);
+/**
+ * struct stack_s - doubly linked list representation of a stack (or queue)
+ * @n: integer
+ * @prev: points to the previous element of the stack (or queue)
+ * @next: points to the next element of the stack (or queue)
+ * Description: doubly linked list node structure
+ * for stack, queues, LIFO, FIFO Holberton project
+ */
+typedef struct meta_s
+{
+	char *buf;
+	stack_t *stack;
+	FILE *file;
+} meta_t;
 
-/*Stack operations*/
-stack_t *create_node(int n);
-void free_nodes(void);
-void print_stack(stack_t **, unsigned int);
-void add_to_stack(stack_t **, unsigned int);
-void add_to_queue(stack_t **, unsigned int);
+/* Important functions */
+void (*get_op_func(line_t line, meta_t *meta))(stack_t **, unsigned int);
+int _isalpha(int c);
 
-void call_fun(op_func, char *, char *, int, int);
+/* Parse functions */
+void parsefile(FILE *file);
+void parseline(line_t *line, char *buffer);
 
-void print_top(stack_t **, unsigned int);
-void pop_top(stack_t **, unsigned int);
-void nop(stack_t **, unsigned int);
-void swap_nodes(stack_t **, unsigned int);
+/* Verification functions */
+bool comment_check(line_t line);
+void push_check(line_t line, meta_t *meta, char *opcode);
 
-/*Math operations with nodes*/
-void add_nodes(stack_t **, unsigned int);
-void sub_nodes(stack_t **, unsigned int);
-void div_nodes(stack_t **, unsigned int);
-void mul_nodes(stack_t **, unsigned int);
-void mod_nodes(stack_t **, unsigned int);
+/* Stack manipulation functions */
+void push(stack_t **stack, unsigned int nline);
+void pall(stack_t **stack, unsigned int nline);
+void pint(stack_t **stack, unsigned int nline);
+void pop(stack_t **stack, unsigned int nline);
+void swap(stack_t **stack, unsigned int nline);
+void nop(stack_t **stack, unsigned int nline);
+void rotl(stack_t **stack, unsigned int nline);
+void rotlop(stack_t **stack, unsigned int nline);
+void rotrop(stack_t **stack, unsigned int nline);
+void pchar(stack_t **stack, unsigned int nline);
+void pstr(stack_t **stack, unsigned int nline);
+void free_stack(stack_t **stack);
+void nop(stack_t **stack, unsigned int nline);
+void qpush(stack_t **stack, unsigned int nline);
+void addqu(stack_t **stack, unsigned int nline);
+void addst(stack_t **stack, unsigned int nline);
 
-/*String operations*/
-void print_char(stack_t **, unsigned int);
-void print_str(stack_t **, unsigned int);
-void rotl(stack_t **, unsigned int);
+/* Math functions */
+void subop(stack_t **stack, unsigned int nline);
+void addop(stack_t **stack, unsigned int nline);
+void divop(stack_t **stack, unsigned int nline);
+void mulop(stack_t **stack, unsigned int nline);
+void modop(stack_t **stack, unsigned int nline);
 
-/*Error hanlding*/
-void err(int error_code, ...);
-void more_err(int error_code, ...);
-void string_err(int error_code, ...);
-void rotr(stack_t **, unsigned int);
-
-#endif
+#endif /* MONTY_H */
